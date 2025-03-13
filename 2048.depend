@@ -1,4 +1,17 @@
 # depslib dependency file v1.0
-1741513359 source:g:\code\personal_project\2048\main.cpp
+1741686270 source:g:\code\personal_project\2048\main.cpp
+	"2048.h"
+
+1741685579 source:g:\code\personal_project\2048\image.cpp
+
+1741686270 source:g:\code\personal_project\2048\logic.cpp
+	"2048.h"
+
+1741686270 g:\code\personal_project\2048\2048.h
 	<iostream>
+	<vector>
+	<ctime>
+	<cstdlib>
+	<iomanip>
+	<conio.h>
 

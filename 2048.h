@@ -3,19 +3,26 @@
 #include <SDL.h>
 #include <SDL_image.h>
 #include <iostream>
-#include <vector>
 #include <cstdlib>
 ##include <utility>
 
 using namespace std;
 
-const int SIZE = 100;
-const int HEIGHT = SIZE*4;
-const int WIDTH = SIZE*4;
+const int SCREEN_WIDTH = 400;
+const int SCREEN_HEIGHT = 400;
+const int GRID_SIZE = 4;
+const int CELL_SIZE = 90;
+const int PADDING = 10;
 
-int BOARD[4][4]={0};
+extern int board[GRID_SIZE][GRID_SIZE];
 
-void
-
+void add_Number();
+bool checkWin();
+bool canMove();
+bool moveLeft();
+bool moveRight();
+bool moveUp();
+bool moveDown();
+void handleInput(SDL_Event& event);
 
 #endif

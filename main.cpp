@@ -1,6 +1,7 @@
-#include <iostream>
-using namespace std;
-int main(){
-    cout<<"hello";
-return 0;
+#include "2048.h"
+
+int main(int argc, char* argv[]) {
+
+    add_Number();
+    add_Number();
 }
