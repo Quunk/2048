@@ -153,10 +153,10 @@ void handleInput(SDL_Event& event) {
     bool moved = false;
     if (event.type == SDL_KEYDOWN) {
         switch (event.key.keysym.sym) {
-            case SDLK_a: moved = moveLeft(); break;
-            case SDLK_d: moved = moveRight(); break;
-            case SDLK_w: moved = moveUp(); break;
-            case SDLK_s: moved = moveDown(); break;
+            case SDLK_LEFT: moved = moveLeft(); break;
+            case SDLK_RIGHT: moved = moveRight(); break;
+            case SDLK_UP: moved = moveUp(); break;
+            case SDLK_DOWN: moved = moveDown(); break;
         }
         if (moved) add_Number();
     }
