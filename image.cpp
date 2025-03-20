@@ -27,7 +27,8 @@ void initSDL() {
 
     window = SDL_CreateWindow("2048 Game", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
     renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
-    font = TTF_OpenFont("arial.ttf", 24);
+    font = TTF_OpenFont("arial.ttf", 30);
+    TTF_SetFontStyle(font, TTF_STYLE_BOLD); // In đậm
 }
 
 SDL_Color getTileColor(int value) {
@@ -112,3 +113,92 @@ void closeSDL() {
     TTF_Quit();
     SDL_Quit();
 }
+
+void renderGameOver() {
+    SDL_Color bgColor = {187, 173, 160, 255}; // Màu nền
+    SDL_SetRenderDrawColor(renderer, bgColor.r, bgColor.g, bgColor.b, 255);
+    SDL_Rect overlay = {50, 200, 320, 200}; // Hộp thông báo
+    SDL_RenderFillRect(renderer, &overlay);
+
+    SDL_Color textColor = {255, 255, 255, 255}; // Màu trắng
+    SDL_Surface* textSurface = TTF_RenderText_Solid(font, "Game Over!", textColor);
+    SDL_Texture* textTexture = SDL_CreateTextureFromSurface(renderer, textSurface);
+    SDL_Rect textRect = {130, 220, textSurface->w, textSurface->h};
+    SDL_RenderCopy(renderer, textTexture, NULL, &textRect);
+    SDL_FreeSurface(textSurface);
+    SDL_DestroyTexture(textTexture);
+
+    // Vẽ nút Restart
+    renderButton("Restart", 120, 270, 180, 50, {119, 110, 101});
+
+    // Vẽ nút Quit
+    renderButton("Quit", 120, 330, 180, 50, {205, 50, 50});
+}
+
+void renderWIN() {
+    SDL_Color bgColor = {187, 173, 160, 255}; // Màu nền
+    SDL_SetRenderDrawColor(renderer, bgColor.r, bgColor.g, bgColor.b, 255);
+    SDL_Rect overlay = {50, 200, 320, 200}; // Hộp thông báo
+    SDL_RenderFillRect(renderer, &overlay);
+
+    SDL_Color textColor = {255, 255, 255, 255}; // Màu trắng
+    SDL_Surface* textSurface = TTF_RenderText_Solid(font, "You Win!", textColor);
+    SDL_Texture* textTexture = SDL_CreateTextureFromSurface(renderer, textSurface);
+    SDL_Rect textRect = {130, 220, textSurface->w, textSurface->h};
+    SDL_RenderCopy(renderer, textTexture, NULL, &textRect);
+    SDL_FreeSurface(textSurface);
+    SDL_DestroyTexture(textTexture);
+
+    // Vẽ nút Restart
+    renderButton("Restart", 120, 270, 180, 50, {119, 110, 101});
+
+    // Vẽ nút Quit
+    renderButton("Quit", 120, 330, 180, 50, {205, 50, 50});
+}
+
+void renderScore() {
+    SDL_Color textColor = { 0, 0, 0 }; // Màu chữ đen
+    string scoreText = "Score: " + to_string(score);
+
+    SDL_Surface* surface = TTF_RenderText_Solid(font, scoreText.c_str(), textColor);
+    SDL_Texture* texture = SDL_CreateTextureFromSurface(renderer, surface);
+
+    SDL_Rect scoreRect = { 50, 20, surface->w, surface->h };
+    SDL_RenderCopy(renderer, texture, NULL, &scoreRect);
+
+    SDL_FreeSurface(surface);
+    SDL_DestroyTexture(texture);
+
+    // Hiển thị highest score
+    string highScoreText = "Highest Score: " + to_string(highestScore);
+    SDL_Surface* hsSurface = TTF_RenderText_Solid(font, highScoreText.c_str(), textColor);
+    SDL_Texture* hsTexture = SDL_CreateTextureFromSurface(renderer, hsSurface);
+    SDL_Rect hsRect = { 50, 50, hsSurface->w, hsSurface->h };
+    SDL_RenderCopy(renderer, hsTexture, NULL, &hsRect);
+    SDL_FreeSurface(hsSurface);
+    SDL_DestroyTexture(hsTexture);
+}
+
+void renderButton(const char* text, int x, int y, int w, int h, SDL_Color color) {
+    SDL_Rect buttonRect = {x, y, w, h};
+    SDL_SetRenderDrawColor(renderer, color.r, color.g, color.b, 255);
+    SDL_RenderFillRect(renderer, &buttonRect);
+
+    SDL_Color textColor = {255, 255, 255};  // Màu chữ trắng
+    SDL_Surface* textSurface = TTF_RenderText_Solid(font, text, textColor);
+    SDL_Texture* textTexture = SDL_CreateTextureFromSurface(renderer, textSurface);
+
+    int textWidth, textHeight;
+    TTF_SizeText(font, text, &textWidth, &textHeight);
+    SDL_Rect textRect = {
+        x + (w - textWidth) / 2,
+        y + (h - textHeight) / 2,
+        textWidth,
+        textHeight
+    };
+
+    SDL_RenderCopy(renderer, textTexture, NULL, &textRect);
+    SDL_FreeSurface(textSurface);
+    SDL_DestroyTexture(textTexture);
+}
+
