@@ -3,6 +3,7 @@
 #include <SDL.h>
 #include <SDL_ttf.h>
 #include <SDL_image.h>
+#include <SDL_mixer.h>
 #include <iostream>
 #include <cstdlib>
 #include <ctime>
@@ -21,11 +22,15 @@ const int BOARD_Y = 200;
 extern SDL_Window* window;
 extern SDL_Renderer* renderer;
 extern TTF_Font* font;
+extern Mix_Chunk* moveSound;
+extern Mix_Chunk* winSound;
+extern Mix_Chunk* loseSound;
 
 extern int board[GRID_SIZE][GRID_SIZE];
 
 extern int score;
 extern int highestScore;
+extern int highScore;
 
 void add_Number();
 bool checkWin();
@@ -39,7 +44,7 @@ void handleInput(SDL_Event& event);
 
 void loadHighestScore();
 void saveHighestScore();
-
+void comparisionScore();
 SDL_Texture* loadTexture(const string& path);
 void initSDL();
 SDL_Color getTileColor(int value);

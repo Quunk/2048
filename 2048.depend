@@ -1,17 +1,18 @@
 # depslib dependency file v1.0
-1742489938 source:g:\code\personal_project\2048\main.cpp
+1742630851 source:g:\code\personal_project\2048\main.cpp
 	"2048.h"
 
-1742490034 source:g:\code\personal_project\2048\image.cpp
+1742630851 source:g:\code\personal_project\2048\image.cpp
 	"2048.h"
 
-1742490357 source:g:\code\personal_project\2048\logic.cpp
+1742630851 source:g:\code\personal_project\2048\logic.cpp
 	"2048.h"
 
-1742489938 g:\code\personal_project\2048\2048.h
+1742630851 g:\code\personal_project\2048\2048.h
 	<SDL.h>
 	<SDL_ttf.h>
 	<SDL_image.h>
+	<SDL_mixer.h>
 	<iostream>
 	<cstdlib>
 	<ctime>

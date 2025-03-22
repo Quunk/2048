@@ -3,6 +3,7 @@
 int board[GRID_SIZE][GRID_SIZE]={0};
 int score = 0;
 int highestScore = 0;
+int highScore = 0;
 // Hàm thêm số 2 vào vị trí ngẫu nhiên
 void add_Number() {
     int emptyTiles[GRID_SIZE * GRID_SIZE][2], count = 0;
@@ -69,7 +70,9 @@ bool moveLeft() {
     if (score > highestScore) {
         highestScore = score;
     }
-
+    if (moved) {
+    Mix_PlayChannel(-1, moveSound, 0);
+    }
     return moved;
 }
 
@@ -101,7 +104,9 @@ bool moveRight() {
     if (score > highestScore) {
         highestScore = score;
     }
-
+    if (moved) {
+    Mix_PlayChannel(-1, moveSound, 0);
+    }
     return moved;
 }
 
@@ -133,7 +138,9 @@ bool moveUp() {
     if (score > highestScore) {
         highestScore = score;
     }
-
+    if (moved) {
+    Mix_PlayChannel(-1, moveSound, 0);
+    }
     return moved;
 }
 
@@ -165,7 +172,9 @@ bool moveDown() {
     if (score > highestScore) {
         highestScore = score;
     }
-
+    if (moved) {
+    Mix_PlayChannel(-1, moveSound, 0);
+    }
     return moved;
 }
 
@@ -212,7 +221,7 @@ void loadHighestScore() {
 }
 
 void saveHighestScore() {
-    if (score > highestScore) {  // Chỉ lưu khi đạt điểm cao mới
+    if (score > highestScore) {  // Chỉ lưu nếu đạt điểm cao hơn
         highestScore = score;
         FILE* file = fopen("highestscore.txt", "w");
         if (file) {

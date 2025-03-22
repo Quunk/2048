@@ -15,6 +15,7 @@ int main(int argc, char* argv[]) {
     SDL_Event event;
     while (running) {
         if (!canMove()) {
+            Mix_PlayChannel(-1, loseSound, 0); // Phát âm thanh game over
             renderGameOver();
             SDL_RenderPresent(renderer);
 
@@ -35,6 +36,7 @@ int main(int argc, char* argv[]) {
         }
 
         if (checkWin()) {
+            Mix_PlayChannel(-1, winSound, 0); // Phát âm thanh game over
             renderWIN();
             SDL_RenderPresent(renderer);
             saveHighestScore();
@@ -63,6 +65,7 @@ int main(int argc, char* argv[]) {
         SDL_RenderClear(renderer);
         renderBoard();
         renderScore();
+        saveHighestScore();
         renderTiles();
         SDL_RenderPresent(renderer);
     }

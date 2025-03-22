@@ -3,6 +3,9 @@
 SDL_Window* window = nullptr;
 SDL_Renderer* renderer = nullptr;
 TTF_Font* font = nullptr;
+Mix_Chunk* moveSound = nullptr;
+Mix_Chunk* winSound = nullptr;
+Mix_Chunk* loseSound = nullptr;
 
 // Hàm load ảnh số
 SDL_Texture* loadTexture(const string& path) {
@@ -29,7 +32,18 @@ void initSDL() {
     renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
     font = TTF_OpenFont("arial.ttf", 30);
     TTF_SetFontStyle(font, TTF_STYLE_BOLD); // In đậm
+
+    if (Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048) < 0) {
+        printf("SDL_mixer could not initialize! SDL_mixer Error: %s\n", Mix_GetError());
+    }
+    moveSound = Mix_LoadWAV("move.wav");
+    winSound = Mix_LoadWAV("win.wav");
+    loseSound = Mix_LoadWAV("lose.wav");
+    if (!moveSound||!window||!loseSound) {
+        printf("Failed to load move sound! SDL_mixer Error: %s\n", Mix_GetError());
+    }
 }
+
 
 SDL_Color getTileColor(int value) {
     switch (value) {
@@ -112,6 +126,10 @@ void closeSDL() {
     SDL_DestroyWindow(window);
     TTF_Quit();
     SDL_Quit();
+    Mix_FreeChunk(moveSound);
+    Mix_FreeChunk(winSound);
+    Mix_FreeChunk(loseSound);
+    Mix_CloseAudio();
 }
 
 void renderGameOver() {
