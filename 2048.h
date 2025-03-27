@@ -31,6 +31,7 @@ extern int board[GRID_SIZE][GRID_SIZE];
 extern int score;
 extern int highestScore;
 extern int highScore;
+extern int previousHighScore; // Lưu điểm cao nhất của các lần thắng trước
 
 void add_Number();
 bool checkWin();
@@ -53,6 +54,7 @@ void renderBoard();
 void renderGameOver();
 void renderWIN();
 void renderScore();
+void handleGameOver();
 void renderButton(const char* text, int x, int y, int w, int h, SDL_Color color);
 
 void closeSDL();

@@ -4,6 +4,8 @@ int board[GRID_SIZE][GRID_SIZE]={0};
 int score = 0;
 int highestScore = 0;
 int highScore = 0;
+int previousHighScore = 0;
+
 // Hàm thêm số 2 vào vị trí ngẫu nhiên
 void add_Number() {
     int emptyTiles[GRID_SIZE * GRID_SIZE][2], count = 0;
@@ -189,6 +191,7 @@ void handleMouseClick(int x, int y) {
     }
     // Kiểm tra nếu nhấn vào nút Quit
     else if (x >= 120 && x <= 300 && y >= 330 && y <= 380) {
+        saveHighestScore(); // Lưu highestScore trước khi thoát
         SDL_Quit(); // Thoát game
         exit(0);
     }
@@ -216,18 +219,23 @@ void loadHighestScore() {
     FILE* file = fopen("highestscore.txt", "r");
     if (file) {
         fscanf(file, "%d", &highestScore);
+        previousHighScore = highestScore;  // Lưu lại highestScore trước đó
         fclose(file);
+    } else {
+        highestScore = 0;
+        previousHighScore = 0;
     }
 }
 
 void saveHighestScore() {
-    if (score > highestScore) {  // Chỉ lưu nếu đạt điểm cao hơn
-        highestScore = score;
-        FILE* file = fopen("highestscore.txt", "w");
-        if (file) {
-            fprintf(file, "%d", highestScore);
-            fclose(file);
-        }
+    FILE* file = fopen("highestscore.txt", "w");
+    if (file) {
+        fprintf(file, "%d", highestScore);
+        fclose(file);
     }
 }
+void handleGameOver() {
+    highestScore = previousHighScore;  // Khôi phục highestScore cũ
+    saveHighestScore();  // Ghi lại vào file
+};
 

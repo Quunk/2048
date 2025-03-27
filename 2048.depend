@@ -1,14 +1,14 @@
 # depslib dependency file v1.0
-1742630851 source:g:\code\personal_project\2048\main.cpp
+1743049778 source:g:\code\personal_project\2048\main.cpp
 	"2048.h"
 
 1742630851 source:g:\code\personal_project\2048\image.cpp
 	"2048.h"
 
-1742630851 source:g:\code\personal_project\2048\logic.cpp
+1743049778 source:g:\code\personal_project\2048\logic.cpp
 	"2048.h"
 
-1742630851 g:\code\personal_project\2048\2048.h
+1743049778 g:\code\personal_project\2048\2048.h
 	<SDL.h>
 	<SDL_ttf.h>
 	<SDL_image.h>
