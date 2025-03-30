@@ -1,9 +1,8 @@
 #include "2048.h"
-
+#include "text.h"
 int board[GRID_SIZE][GRID_SIZE]={0};
 int score = 0;
 int highestScore = 0;
-int highScore = 0;
 int previousHighScore = 0;
 
 // Hàm thêm số 2 vào vị trí ngẫu nhiên
@@ -23,6 +22,7 @@ void add_Number() {
         board[emptyTiles[r][0]][emptyTiles[r][1]] = (rand() % 10 < 9) ? 2 : 4;
     }
 }
+//điều kiện thắng
 bool checkWin(){
     for(int i=0;i<4;i++){
         for(int j=0;j<4;j++){
@@ -31,7 +31,7 @@ bool checkWin(){
     }
     return false;
 }
-
+//khả năng di chuyển ô số
 bool canMove() {
     for (int i = 0; i < 4; i++) {
         for (int j = 0; j < 4; j++) {
@@ -180,6 +180,7 @@ bool moveDown() {
     return moved;
 }
 
+// xử lí nhấp chuột
 void handleMouseClick(int x, int y) {
     // Kiểm tra nếu nhấn vào nút Restart
     if (x >= 120 && x <= 300 && y >= 270 && y <= 320) {
@@ -196,7 +197,7 @@ void handleMouseClick(int x, int y) {
         exit(0);
     }
 }
-
+//xử lí nút di chuyển
 void handleInput(SDL_Event& event) {
     bool moved = false;
     if (event.type == SDL_KEYDOWN) {
@@ -214,7 +215,7 @@ void handleInput(SDL_Event& event) {
         handleMouseClick(mouseX, mouseY);
     }
 }
-
+//đọc nội dung từ file
 void loadHighestScore() {
     FILE* file = fopen("highestscore.txt", "r");
     if (file) {
@@ -226,7 +227,7 @@ void loadHighestScore() {
         previousHighScore = 0;
     }
 }
-
+//lưu điểm
 void saveHighestScore() {
     FILE* file = fopen("highestscore.txt", "w");
     if (file) {
@@ -234,7 +235,9 @@ void saveHighestScore() {
         fclose(file);
     }
 }
-void handleGameOver() {
+
+//khi thua xóa điểm và trả về điểm cao nhất trước
+void whenGameOver() {
     highestScore = previousHighScore;  // Khôi phục highestScore cũ
     saveHighestScore();  // Ghi lại vào file
 };

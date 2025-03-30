@@ -15,7 +15,8 @@ int main(int argc, char* argv[]) {
     SDL_Event event;
     while (running) {
         if (!canMove()) {
-            handleGameOver();
+            SDL_RenderCopy(renderer, backgroundTexture, NULL, NULL);
+            whenGameOver();
             Mix_PlayChannel(-1, loseSound, 0); // Phát âm thanh game over
             renderGameOver();
             SDL_RenderPresent(renderer);
@@ -37,6 +38,7 @@ int main(int argc, char* argv[]) {
         }
 
         if (checkWin()) {
+            SDL_RenderCopy(renderer, backgroundTexture, NULL, NULL);
             if (score > highestScore) {
                 highestScore = score;
                 saveHighestScore();  // Lưu điểm cao nhất

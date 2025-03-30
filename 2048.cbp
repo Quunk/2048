@@ -33,7 +33,8 @@
 			<Add option="-fexceptions" />
 		</Compiler>
 		<Unit filename="2048.h" />
-		<Unit filename="image.cpp" />
+		<Unit filename="graphic_and_sound.cpp" />
+		<Unit filename="highestscore.txt" />
 		<Unit filename="logic.cpp" />
 		<Unit filename="main.cpp" />
 		<Extensions>

@@ -6,17 +6,24 @@ TTF_Font* font = nullptr;
 Mix_Chunk* moveSound = nullptr;
 Mix_Chunk* winSound = nullptr;
 Mix_Chunk* loseSound = nullptr;
+Mix_Music* bgMusic = nullptr;
+SDL_Texture* backgroundTexture = nullptr;
 
-// Hàm load ảnh số
-SDL_Texture* loadTexture(const string& path) {
+//load background
+SDL_Texture* loadBackground(const std::string& path, SDL_Renderer* renderer) {
     SDL_Texture* newTexture = nullptr;
     SDL_Surface* loadedSurface = IMG_Load(path.c_str());
-    if (loadedSurface == nullptr) {
-        cerr << "ERROR: " << path << " SDL_image Error: " << IMG_GetError() << endl;
+
+    if (!loadedSurface) {
+        printf("Không thể load ảnh! SDL_image Error: %s\n", IMG_GetError());
     } else {
         newTexture = SDL_CreateTextureFromSurface(renderer, loadedSurface);
+        if (!newTexture) {
+            printf("Không thể tạo texture từ ảnh! SDL Error: %s\n", SDL_GetError());
+        }
         SDL_FreeSurface(loadedSurface);
     }
+
     return newTexture;
 }
 
@@ -33,14 +40,29 @@ void initSDL() {
     font = TTF_OpenFont("arial.ttf", 30);
     TTF_SetFontStyle(font, TTF_STYLE_BOLD); // In đậm
 
+    // Load background texture
+    backgroundTexture = loadBackground("background.png", renderer);
+
+    // khởi tạo SDL_mixer với MIX_INIT_MP3
+    int flags = MIX_INIT_MP3;
+    int initted = Mix_Init(flags);
+    if ((initted & flags) != flags) {
+        printf("Mix_Init: Failed to initialize! SDL_mixer Error: %s\n", Mix_GetError());
+    }
+
     if (Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048) < 0) {
         printf("SDL_mixer could not initialize! SDL_mixer Error: %s\n", Mix_GetError());
     }
+    Mix_VolumeMusic(MIX_MAX_VOLUME); // Đặt âm lượng tối đa
     moveSound = Mix_LoadWAV("move.wav");
     winSound = Mix_LoadWAV("win.wav");
     loseSound = Mix_LoadWAV("lose.wav");
-    if (!moveSound||!window||!loseSound) {
-        printf("Failed to load move sound! SDL_mixer Error: %s\n", Mix_GetError());
+    bgMusic = Mix_LoadMUS ("music.mp3");
+    if (!moveSound||!window||!loseSound||!bgMusic) {
+        printf("Failed to load effectsound! SDL_mixer Error: %s\n", Mix_GetError());
+    }
+    else {
+        Mix_PlayMusic(bgMusic, -1);
     }
 }
 
@@ -61,6 +83,7 @@ SDL_Color getTileColor(int value) {
         default: return {60, 58, 50};
     }
 }
+//vẽ các ô số
 void renderTiles() {
     for (int i = 0; i < GRID_SIZE; i++) {
         for (int j = 0; j < GRID_SIZE; j++) {
@@ -102,7 +125,8 @@ void renderTiles() {
 }
 // Hiển thị bảng game
 void renderBoard() {
-    SDL_SetRenderDrawColor(renderer, 187, 173, 160, 255);
+    SDL_RenderCopy(renderer, backgroundTexture, NULL, NULL);
+    SDL_SetRenderDrawColor(renderer, 0, 170, 170, 255);
     SDL_Rect boardRect = {BOARD_X, BOARD_Y, 4 * (CELL_SIZE + PADDING) + PADDING, 4 * (CELL_SIZE + PADDING) + PADDING};
     SDL_RenderFillRect(renderer, &boardRect);
 
@@ -132,16 +156,12 @@ void closeSDL() {
     Mix_CloseAudio();
 }
 
+//vẽ bảng menu khi kết thúc
 void renderGameOver() {
-    SDL_Color bgColor = {187, 173, 160, 255}; // Màu nền
-    SDL_SetRenderDrawColor(renderer, bgColor.r, bgColor.g, bgColor.b, 255);
-    SDL_Rect overlay = {50, 200, 320, 200}; // Hộp thông báo
-    SDL_RenderFillRect(renderer, &overlay);
-
     SDL_Color textColor = {255, 255, 255, 255}; // Màu trắng
     SDL_Surface* textSurface = TTF_RenderText_Solid(font, "Game Over!", textColor);
     SDL_Texture* textTexture = SDL_CreateTextureFromSurface(renderer, textSurface);
-    SDL_Rect textRect = {130, 220, textSurface->w, textSurface->h};
+    SDL_Rect textRect = {115, 220, textSurface->w, textSurface->h};
     SDL_RenderCopy(renderer, textTexture, NULL, &textRect);
     SDL_FreeSurface(textSurface);
     SDL_DestroyTexture(textTexture);
@@ -154,11 +174,6 @@ void renderGameOver() {
 }
 
 void renderWIN() {
-    SDL_Color bgColor = {187, 173, 160, 255}; // Màu nền
-    SDL_SetRenderDrawColor(renderer, bgColor.r, bgColor.g, bgColor.b, 255);
-    SDL_Rect overlay = {50, 200, 320, 200}; // Hộp thông báo
-    SDL_RenderFillRect(renderer, &overlay);
-
     SDL_Color textColor = {255, 255, 255, 255}; // Màu trắng
     SDL_Surface* textSurface = TTF_RenderText_Solid(font, "You Win!", textColor);
     SDL_Texture* textTexture = SDL_CreateTextureFromSurface(renderer, textSurface);
@@ -172,29 +187,6 @@ void renderWIN() {
 
     // Vẽ nút Quit
     renderButton("Quit", 120, 330, 180, 50, {205, 50, 50});
-}
-
-void renderScore() {
-    SDL_Color textColor = { 0, 0, 0 }; // Màu chữ đen
-    string scoreText = "Score: " + to_string(score);
-
-    SDL_Surface* surface = TTF_RenderText_Solid(font, scoreText.c_str(), textColor);
-    SDL_Texture* texture = SDL_CreateTextureFromSurface(renderer, surface);
-
-    SDL_Rect scoreRect = { 50, 20, surface->w, surface->h };
-    SDL_RenderCopy(renderer, texture, NULL, &scoreRect);
-
-    SDL_FreeSurface(surface);
-    SDL_DestroyTexture(texture);
-
-    // Hiển thị highest score
-    string highScoreText = "Highest Score: " + to_string(highestScore);
-    SDL_Surface* hsSurface = TTF_RenderText_Solid(font, highScoreText.c_str(), textColor);
-    SDL_Texture* hsTexture = SDL_CreateTextureFromSurface(renderer, hsSurface);
-    SDL_Rect hsRect = { 50, 50, hsSurface->w, hsSurface->h };
-    SDL_RenderCopy(renderer, hsTexture, NULL, &hsRect);
-    SDL_FreeSurface(hsSurface);
-    SDL_DestroyTexture(hsTexture);
 }
 
 void renderButton(const char* text, int x, int y, int w, int h, SDL_Color color) {
@@ -220,3 +212,26 @@ void renderButton(const char* text, int x, int y, int w, int h, SDL_Color color)
     SDL_DestroyTexture(textTexture);
 }
 
+// hiện điểm
+void renderScore() {
+    SDL_Color textColor = { 255, 255, 255}; // Màu chữ trắng
+    string scoreText = "Score: " + to_string(score);
+
+    SDL_Surface* surface = TTF_RenderText_Solid(font, scoreText.c_str(), textColor);
+    SDL_Texture* texture = SDL_CreateTextureFromSurface(renderer, surface);
+
+    SDL_Rect scoreRect = { 20, 120, surface->w, surface->h };
+    SDL_RenderCopy(renderer, texture, NULL, &scoreRect);
+
+    SDL_FreeSurface(surface);
+    SDL_DestroyTexture(texture);
+
+    // Hiển thị highest score
+    string highScoreText = "Highest: " + to_string(highestScore);
+    SDL_Surface* hsSurface = TTF_RenderText_Solid(font, highScoreText.c_str(), textColor);
+    SDL_Texture* hsTexture = SDL_CreateTextureFromSurface(renderer, hsSurface);
+    SDL_Rect hsRect = { 20, 150, hsSurface->w, hsSurface->h };
+    SDL_RenderCopy(renderer, hsTexture, NULL, &hsRect);
+    SDL_FreeSurface(hsSurface);
+    SDL_DestroyTexture(hsTexture);
+}

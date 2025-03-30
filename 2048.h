@@ -19,20 +19,23 @@ const int PADDING = 10;
 const int BOARD_X = 9;
 const int BOARD_Y = 200;
 
+extern int board[GRID_SIZE][GRID_SIZE];
+
+//Tạo cửa sổ
 extern SDL_Window* window;
 extern SDL_Renderer* renderer;
-extern TTF_Font* font;
+
+//Sound
 extern Mix_Chunk* moveSound;
 extern Mix_Chunk* winSound;
 extern Mix_Chunk* loseSound;
+extern Mix_Music* bgMusic;
 
-extern int board[GRID_SIZE][GRID_SIZE];
+//background
+extern SDL_Texture* backgroundTexture;
+SDL_Texture* loadBackground(const std::string& path, SDL_Renderer* renderer);
 
-extern int score;
-extern int highestScore;
-extern int highScore;
-extern int previousHighScore; // Lưu điểm cao nhất của các lần thắng trước
-
+//Logic
 void add_Number();
 bool checkWin();
 bool canMove();
@@ -43,18 +46,27 @@ bool moveDown();
 void handleMouseClick(int x, int y);
 void handleInput(SDL_Event& event);
 
+//Score
+extern int score;
+extern int highestScore;
+extern int highScore;
+extern int previousHighScore; // Lưu điểm cao nhất của các lần thắng trước
 void loadHighestScore();
 void saveHighestScore();
-void comparisionScore();
+
+//vẽ bảng
+extern TTF_Font* font;
 SDL_Texture* loadTexture(const string& path);
 void initSDL();
 SDL_Color getTileColor(int value);
 void renderTiles();
 void renderBoard();
+
+//Menu
 void renderGameOver();
 void renderWIN();
 void renderScore();
-void handleGameOver();
+void whenGameOver();
 void renderButton(const char* text, int x, int y, int w, int h, SDL_Color color);
 
 void closeSDL();
