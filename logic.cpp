@@ -1,15 +1,14 @@
-#include "2048.h"
-#include "text.h"
-int board[GRID_SIZE][GRID_SIZE]={0};
-int score = 0;
-int highestScore = 0;
-int previousHighScore = 0;
+#include "logic.h"
+#include <iostream>
+
+
+using namespace std;
 
 // Hàm thêm số 2 vào vị trí ngẫu nhiên
-void add_Number() {
-    int emptyTiles[GRID_SIZE * GRID_SIZE][2], count = 0;
-    for (int i = 0; i < GRID_SIZE; i++) {
-        for (int j = 0; j < GRID_SIZE; j++) {
+void add_Number(int board[4][4]) {
+    int emptyTiles[4 * 4][2], count = 0;
+    for (int i = 0; i < 4; i++) {
+        for (int j = 0; j < 4; j++) {
             if (board[i][j] == 0) {
                 emptyTiles[count][0] = i;
                 emptyTiles[count][1] = j;
@@ -23,7 +22,7 @@ void add_Number() {
     }
 }
 //điều kiện thắng
-bool checkWin(){
+bool checkWin(int board[4][4]){
     for(int i=0;i<4;i++){
         for(int j=0;j<4;j++){
             if(board[i][j]==2048){return true;}
@@ -32,7 +31,7 @@ bool checkWin(){
     return false;
 }
 //khả năng di chuyển ô số
-bool canMove() {
+bool canMove(int board[4][4]) {
     for (int i = 0; i < 4; i++) {
         for (int j = 0; j < 4; j++) {
             if (board[i][j] == 0) return true;  // Còn ô trống
@@ -44,12 +43,12 @@ bool canMove() {
 }
 
 // Hàm di chuyển
-bool moveLeft() {
+bool moveLeft(int board[4][4],int score,int highestScore, Mix_Chunk* moveSound) {
     bool moved = false;
-    for (int i = 0; i < GRID_SIZE; i++) {
+    for (int i = 0; i < 4; i++) {
         int target = 0;
         int lastValue = 0;
-        for (int j = 0; j < GRID_SIZE; j++) {
+        for (int j = 0; j < 4; j++) {
             if (board[i][j] != 0) {
                 if (board[i][j] == lastValue) {
                     board[i][target - 1] *= 2;
@@ -78,12 +77,12 @@ bool moveLeft() {
     return moved;
 }
 
-bool moveRight() {
+bool moveRight(int board[4][4],int score,int highestScore, Mix_Chunk* moveSound) {
     bool moved = false;
-    for (int i = 0; i < GRID_SIZE; i++) {
-        int target = GRID_SIZE - 1;
+    for (int i = 0; i < 4; i++) {
+        int target = 4 - 1;
         int lastValue = 0;
-        for (int j = GRID_SIZE - 1; j >= 0; j--) {
+        for (int j = 4 - 1; j >= 0; j--) {
             if (board[i][j] != 0) {
                 if (board[i][j] == lastValue) {
                     board[i][target + 1] *= 2;
@@ -112,12 +111,12 @@ bool moveRight() {
     return moved;
 }
 
-bool moveUp() {
+bool moveUp(int board[4][4],int score,int highestScore, Mix_Chunk* moveSound) {
     bool moved = false;
-    for (int j = 0; j < GRID_SIZE; j++) { // Duyệt từng cột
+    for (int j = 0; j < 4; j++) { // Duyệt từng cột
         int target = 0;
         int lastValue = 0;
-        for (int i = 0; i < GRID_SIZE; i++) {
+        for (int i = 0; i < 4; i++) {
             if (board[i][j] != 0) {
                 if (board[i][j] == lastValue) {
                     board[target - 1][j] *= 2;
@@ -146,12 +145,12 @@ bool moveUp() {
     return moved;
 }
 
-bool moveDown() {
+bool moveDown(int board[4][4],int score,int highestScore, Mix_Chunk* moveSound) {
     bool moved = false;
-    for (int j = 0; j < GRID_SIZE; j++) { // Duyệt từng cột
-        int target = GRID_SIZE - 1;
+    for (int j = 0; j < 4; j++) { // Duyệt từng cột
+        int target = 4 - 1;
         int lastValue = 0;
-        for (int i = GRID_SIZE - 1; i >= 0; i--) {
+        for (int i = 4 - 1; i >= 0; i--) {
             if (board[i][j] != 0) {
                 if (board[i][j] == lastValue) {
                     board[target + 1][j] *= 2;
@@ -179,66 +178,3 @@ bool moveDown() {
     }
     return moved;
 }
-
-// xử lí nhấp chuột
-void handleMouseClick(int x, int y) {
-    // Kiểm tra nếu nhấn vào nút Restart
-    if (x >= 120 && x <= 300 && y >= 270 && y <= 320) {
-        // Reset game
-        memset(board, 0, sizeof(board)); // Xóa bảng
-        score = 0; // Reset điểm
-        add_Number();
-        add_Number();
-    }
-    // Kiểm tra nếu nhấn vào nút Quit
-    else if (x >= 120 && x <= 300 && y >= 330 && y <= 380) {
-        saveHighestScore(); // Lưu highestScore trước khi thoát
-        SDL_Quit(); // Thoát game
-        exit(0);
-    }
-}
-//xử lí nút di chuyển
-void handleInput(SDL_Event& event) {
-    bool moved = false;
-    if (event.type == SDL_KEYDOWN) {
-        switch (event.key.keysym.sym) {
-            case SDLK_LEFT: moved = moveLeft(); break;
-            case SDLK_RIGHT: moved = moveRight(); break;
-            case SDLK_UP: moved = moveUp(); break;
-            case SDLK_DOWN: moved = moveDown(); break;
-        }
-        if (moved) add_Number();
-    }
-    else if (event.type == SDL_MOUSEBUTTONDOWN) {
-        int mouseX = event.button.x;
-        int mouseY = event.button.y;
-        handleMouseClick(mouseX, mouseY);
-    }
-}
-//đọc nội dung từ file
-void loadHighestScore() {
-    FILE* file = fopen("highestscore.txt", "r");
-    if (file) {
-        fscanf(file, "%d", &highestScore);
-        previousHighScore = highestScore;  // Lưu lại highestScore trước đó
-        fclose(file);
-    } else {
-        highestScore = 0;
-        previousHighScore = 0;
-    }
-}
-//lưu điểm
-void saveHighestScore() {
-    FILE* file = fopen("highestscore.txt", "w");
-    if (file) {
-        fprintf(file, "%d", highestScore);
-        fclose(file);
-    }
-}
-
-//khi thua xóa điểm và trả về điểm cao nhất trước
-void whenGameOver() {
-    highestScore = previousHighScore;  // Khôi phục highestScore cũ
-    saveHighestScore();  // Ghi lại vào file
-};
-

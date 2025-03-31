@@ -1,22 +1,33 @@
-#include "2048.h"
+#include "logic.h"
+#include "graphic.h"
+#include "score.h"
+#include "sound.h"
+#include "input.h"
+#include <ctime>
+
+int score = 10;
+int highestScore = 0;
+int previousHighScore = 0 ;
+int board[4][4] = {0};
 
 int main(int argc, char* argv[]) {
     srand(time(nullptr));
 
     initSDL();
+    initSDL_mixer();
 
-    loadHighestScore();
+    loadHighestScore(highestScore, previousHighScore);
 
-    add_Number();
-    add_Number();
+    add_Number(board);
+    add_Number(board);
 
     bool running = true;
 
     SDL_Event event;
     while (running) {
-        if (!canMove()) {
+        if (!canMove(board)) {
             SDL_RenderCopy(renderer, backgroundTexture, NULL, NULL);
-            whenGameOver();
+            whenGameOver(highestScore, previousHighScore);
             Mix_PlayChannel(-1, loseSound, 0); // Phát âm thanh game over
             renderGameOver();
             SDL_RenderPresent(renderer);
@@ -31,22 +42,22 @@ int main(int argc, char* argv[]) {
                 else if (event.type == SDL_MOUSEBUTTONDOWN) {
                     int mouseX = event.button.x;
                     int mouseY = event.button.y;
-                    handleMouseClick(mouseX, mouseY);
+                    handleMouseClick(mouseX, mouseY, board, score, highestScore);
                     break; // Thoát vòng lặp sau khi xử lý click
                 }
             }
         }
 
-        if (checkWin()) {
+        if (checkWin(board)) {
             SDL_RenderCopy(renderer, backgroundTexture, NULL, NULL);
             if (score > highestScore) {
                 highestScore = score;
-                saveHighestScore();  // Lưu điểm cao nhất
+                saveHighestScore(highestScore);  // Lưu điểm cao nhất
             }
             Mix_PlayChannel(-1, winSound, 0); // Phát âm thanh game over
             renderWIN();
             SDL_RenderPresent(renderer);
-            saveHighestScore();
+            saveHighestScore(highestScore);
             // Chờ người chơi chọn Restart hoặc Quit
             SDL_Event event;
             while (SDL_WaitEvent(&event)) {
@@ -57,7 +68,7 @@ int main(int argc, char* argv[]) {
                 else if (event.type == SDL_MOUSEBUTTONDOWN) {
                     int mouseX = event.button.x;
                     int mouseY = event.button.y;
-                    handleMouseClick(mouseX, mouseY);
+                    handleMouseClick(mouseX, mouseY, board, score,highestScore);
                     break; // Thoát vòng lặp sau khi xử lý click
                 }
             }
@@ -66,18 +77,26 @@ int main(int argc, char* argv[]) {
         // Xử lý sự kiện và vẽ game như bình thường
         while (SDL_PollEvent(&event)) {
             if (event.type == SDL_QUIT) running = false;
-            handleInput(event);
+            handleInput(event,board,score,highestScore, moveSound);
         }
         SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
         SDL_RenderClear(renderer);
         renderBoard();
-        renderScore();
-        saveHighestScore();
-        renderTiles();
+        renderScore(score, highestScore);
+        saveHighestScore(highestScore);
+        renderTiles(board);
         SDL_RenderPresent(renderer);
     }
 
 
-    closeSDL();
+    TTF_CloseFont(font);
+    SDL_DestroyRenderer(renderer);
+    SDL_DestroyWindow(window);
+    TTF_Quit();
+    SDL_Quit();
+    Mix_FreeChunk(moveSound);
+    Mix_FreeChunk(winSound);
+    Mix_FreeChunk(loseSound);
+    Mix_CloseAudio();
     return 0;
 }

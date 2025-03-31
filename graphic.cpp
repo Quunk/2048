@@ -1,14 +1,9 @@
-#include "2048.h"
+#include "graphic.h"
 
 SDL_Window* window = nullptr;
 SDL_Renderer* renderer = nullptr;
 TTF_Font* font = nullptr;
-Mix_Chunk* moveSound = nullptr;
-Mix_Chunk* winSound = nullptr;
-Mix_Chunk* loseSound = nullptr;
-Mix_Music* bgMusic = nullptr;
 SDL_Texture* backgroundTexture = nullptr;
-
 //load background
 SDL_Texture* loadBackground(const std::string& path, SDL_Renderer* renderer) {
     SDL_Texture* newTexture = nullptr;
@@ -31,9 +26,6 @@ SDL_Texture* loadBackground(const std::string& path, SDL_Renderer* renderer) {
 void initSDL() {
     SDL_Init(SDL_INIT_VIDEO);
     TTF_Init();
-    if (TTF_Init() == -1) {
-    cerr << "TTF_Init Error: " << TTF_GetError() << endl;
-    }
 
     window = SDL_CreateWindow("2048 Game", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
     renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
@@ -42,28 +34,6 @@ void initSDL() {
 
     // Load background texture
     backgroundTexture = loadBackground("background.png", renderer);
-
-    // khởi tạo SDL_mixer với MIX_INIT_MP3
-    int flags = MIX_INIT_MP3;
-    int initted = Mix_Init(flags);
-    if ((initted & flags) != flags) {
-        printf("Mix_Init: Failed to initialize! SDL_mixer Error: %s\n", Mix_GetError());
-    }
-
-    if (Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048) < 0) {
-        printf("SDL_mixer could not initialize! SDL_mixer Error: %s\n", Mix_GetError());
-    }
-    Mix_VolumeMusic(MIX_MAX_VOLUME); // Đặt âm lượng tối đa
-    moveSound = Mix_LoadWAV("move.wav");
-    winSound = Mix_LoadWAV("win.wav");
-    loseSound = Mix_LoadWAV("lose.wav");
-    bgMusic = Mix_LoadMUS ("music.mp3");
-    if (!moveSound||!window||!loseSound||!bgMusic) {
-        printf("Failed to load effectsound! SDL_mixer Error: %s\n", Mix_GetError());
-    }
-    else {
-        Mix_PlayMusic(bgMusic, -1);
-    }
 }
 
 
@@ -84,9 +54,9 @@ SDL_Color getTileColor(int value) {
     }
 }
 //vẽ các ô số
-void renderTiles() {
-    for (int i = 0; i < GRID_SIZE; i++) {
-        for (int j = 0; j < GRID_SIZE; j++) {
+void renderTiles(int board[4][4]) {
+    for (int i = 0; i < 4; i++) {
+        for (int j = 0; j < 4; j++) {
             int value = board[i][j];
 
             if (value > 0) {
@@ -101,7 +71,7 @@ void renderTiles() {
                 };
                 SDL_RenderFillRect(renderer, &tile);
                 // Hiển thị số
-                string text = to_string(value);
+                std::string text = std::to_string(value);
                 SDL_Color textColor = {0, 0, 0};  // Màu đen cho số
                 SDL_Surface* surface = TTF_RenderText_Solid(font, text.c_str(), textColor);
                 SDL_Texture* texture = SDL_CreateTextureFromSurface(renderer, surface);
@@ -126,12 +96,12 @@ void renderTiles() {
 // Hiển thị bảng game
 void renderBoard() {
     SDL_RenderCopy(renderer, backgroundTexture, NULL, NULL);
-    SDL_SetRenderDrawColor(renderer, 0, 170, 170, 255);
+    SDL_SetRenderDrawColor(renderer, 51,177,189, 255);
     SDL_Rect boardRect = {BOARD_X, BOARD_Y, 4 * (CELL_SIZE + PADDING) + PADDING, 4 * (CELL_SIZE + PADDING) + PADDING};
     SDL_RenderFillRect(renderer, &boardRect);
 
-    for (int i = 0; i < GRID_SIZE; i++) {
-        for (int j = 0; j < GRID_SIZE; j++) {
+    for (int i = 0; i < 4; i++) {
+        for (int j = 0; j < 4; j++) {
             SDL_Rect cell = {
                 BOARD_X + j * (CELL_SIZE + PADDING) + PADDING,
                 BOARD_Y + i * (CELL_SIZE + PADDING) + PADDING,
@@ -142,18 +112,6 @@ void renderBoard() {
             SDL_RenderFillRect(renderer, &cell);
         }
     }
-}
-
-void closeSDL() {
-    TTF_CloseFont(font);
-    SDL_DestroyRenderer(renderer);
-    SDL_DestroyWindow(window);
-    TTF_Quit();
-    SDL_Quit();
-    Mix_FreeChunk(moveSound);
-    Mix_FreeChunk(winSound);
-    Mix_FreeChunk(loseSound);
-    Mix_CloseAudio();
 }
 
 //vẽ bảng menu khi kết thúc
@@ -213,9 +171,9 @@ void renderButton(const char* text, int x, int y, int w, int h, SDL_Color color)
 }
 
 // hiện điểm
-void renderScore() {
+void renderScore(int score, int highestScore) {
     SDL_Color textColor = { 255, 255, 255}; // Màu chữ trắng
-    string scoreText = "Score: " + to_string(score);
+    std::string scoreText = "Score: " + std::to_string(score);
 
     SDL_Surface* surface = TTF_RenderText_Solid(font, scoreText.c_str(), textColor);
     SDL_Texture* texture = SDL_CreateTextureFromSurface(renderer, surface);
@@ -227,7 +185,7 @@ void renderScore() {
     SDL_DestroyTexture(texture);
 
     // Hiển thị highest score
-    string highScoreText = "Highest: " + to_string(highestScore);
+    std::string highScoreText = "Highest: " + std::to_string(highestScore);
     SDL_Surface* hsSurface = TTF_RenderText_Solid(font, highScoreText.c_str(), textColor);
     SDL_Texture* hsTexture = SDL_CreateTextureFromSurface(renderer, hsSurface);
     SDL_Rect hsRect = { 20, 150, hsSurface->w, hsSurface->h };

@@ -5,9 +5,9 @@
 1743220576 source:g:\code\personal_project\2048\image.cpp
 	"2048.h"
 
-1743319748 source:g:\code\personal_project\2048\logic.cpp
-	"2048.h"
-	"text.h"
+1743449155 source:g:\code\personal_project\2048\logic.cpp
+	"logic.h"
+	<iostream>
 
 1743226247 g:\code\personal_project\2048\2048.h
 	<SDL.h>
@@ -19,10 +19,45 @@
 	<ctime>
 	<string>
 
-1743319503 source:g:\code\personal_project\2048\graphic_and_sound.cpp
+1743319790 source:g:\code\personal_project\2048\graphic_and_sound.cpp
 	"2048.h"
 
 1743319367 g:\code\personal_project\2048\text.h
 	<string>
 	<SDL_ttf.h>
+
+1743449154 source:g:\code\personal_project\2048\graphic.cpp
+	"graphic.h"
+
+1743449154 g:\code\personal_project\2048\graphic.h
+	<SDL.h>
+	<SDL_ttf.h>
+	<SDL_image.h>
+	<string>
+
+1743449153 source:g:\code\personal_project\2048\score.cpp
+	"score.h"
+	<iostream>
+
+1743449153 g:\code\personal_project\2048\score.h
+
+1743449152 source:g:\code\personal_project\2048\sound.cpp
+	"sound.h"
+	<iostream>
+
+1743449152 g:\code\personal_project\2048\sound.h
+	<SDL_mixer.h>
+
+1743449151 source:g:\code\personal_project\2048\input.cpp
+	"input.h"
+	"logic.h"
+	"score.h"
+
+1743449151 g:\code\personal_project\2048\input.h
+	<SDL.h>
+	<cstdlib>
+	<SDL_mixer.h>
+
+1743449153 g:\code\personal_project\2048\logic.h
+	<SDL_mixer.h>
 
