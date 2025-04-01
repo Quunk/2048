@@ -7,7 +7,7 @@ void handleMouseClick(int x, int y, int board[4][4],int score,int highestScore) 
     // Kiểm tra nếu nhấn vào nút Restart
     if (x >= 120 && x <= 300 && y >= 270 && y <= 320) {
         // Reset game
-        memset(board, 0, sizeof(board)); // Xóa bảng
+        board[4][4] = {0}; // Xóa bảng
         score = 0; // Reset điểm
         add_Number(board);
         add_Number(board);

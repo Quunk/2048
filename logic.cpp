@@ -1,14 +1,15 @@
-#include "logic.h"
-#include <iostream>
+#include "graphic.h"
 
-
-using namespace std;
+int board[GRID_SIZE][GRID_SIZE]={0};
+int score = 0;
+int highestScore = 0;
+int previousHighScore = 0;
 
 // Hàm thêm số 2 vào vị trí ngẫu nhiên
-void add_Number(int board[4][4]) {
-    int emptyTiles[4 * 4][2], count = 0;
-    for (int i = 0; i < 4; i++) {
-        for (int j = 0; j < 4; j++) {
+void add_Number() {
+    int emptyTiles[GRID_SIZE * GRID_SIZE][2], count = 0;
+    for (int i = 0; i < GRID_SIZE; i++) {
+        for (int j = 0; j < GRID_SIZE; j++) {
             if (board[i][j] == 0) {
                 emptyTiles[count][0] = i;
                 emptyTiles[count][1] = j;
@@ -21,8 +22,7 @@ void add_Number(int board[4][4]) {
         board[emptyTiles[r][0]][emptyTiles[r][1]] = (rand() % 10 < 9) ? 2 : 4;
     }
 }
-//điều kiện thắng
-bool checkWin(int board[4][4]){
+bool checkWin(){
     for(int i=0;i<4;i++){
         for(int j=0;j<4;j++){
             if(board[i][j]==2048){return true;}
@@ -30,8 +30,8 @@ bool checkWin(int board[4][4]){
     }
     return false;
 }
-//khả năng di chuyển ô số
-bool canMove(int board[4][4]) {
+
+bool canMove() {
     for (int i = 0; i < 4; i++) {
         for (int j = 0; j < 4; j++) {
             if (board[i][j] == 0) return true;  // Còn ô trống
@@ -43,12 +43,12 @@ bool canMove(int board[4][4]) {
 }
 
 // Hàm di chuyển
-bool moveLeft(int board[4][4],int score,int highestScore, Mix_Chunk* moveSound) {
+bool moveLeft() {
     bool moved = false;
-    for (int i = 0; i < 4; i++) {
+    for (int i = 0; i < GRID_SIZE; i++) {
         int target = 0;
         int lastValue = 0;
-        for (int j = 0; j < 4; j++) {
+        for (int j = 0; j < GRID_SIZE; j++) {
             if (board[i][j] != 0) {
                 if (board[i][j] == lastValue) {
                     board[i][target - 1] *= 2;
@@ -77,12 +77,12 @@ bool moveLeft(int board[4][4],int score,int highestScore, Mix_Chunk* moveSound) 
     return moved;
 }
 
-bool moveRight(int board[4][4],int score,int highestScore, Mix_Chunk* moveSound) {
+bool moveRight() {
     bool moved = false;
-    for (int i = 0; i < 4; i++) {
-        int target = 4 - 1;
+    for (int i = 0; i < GRID_SIZE; i++) {
+        int target = GRID_SIZE - 1;
         int lastValue = 0;
-        for (int j = 4 - 1; j >= 0; j--) {
+        for (int j = GRID_SIZE - 1; j >= 0; j--) {
             if (board[i][j] != 0) {
                 if (board[i][j] == lastValue) {
                     board[i][target + 1] *= 2;
@@ -111,12 +111,12 @@ bool moveRight(int board[4][4],int score,int highestScore, Mix_Chunk* moveSound)
     return moved;
 }
 
-bool moveUp(int board[4][4],int score,int highestScore, Mix_Chunk* moveSound) {
+bool moveUp() {
     bool moved = false;
-    for (int j = 0; j < 4; j++) { // Duyệt từng cột
+    for (int j = 0; j < GRID_SIZE; j++) { // Duyệt từng cột
         int target = 0;
         int lastValue = 0;
-        for (int i = 0; i < 4; i++) {
+        for (int i = 0; i < GRID_SIZE; i++) {
             if (board[i][j] != 0) {
                 if (board[i][j] == lastValue) {
                     board[target - 1][j] *= 2;
@@ -145,12 +145,12 @@ bool moveUp(int board[4][4],int score,int highestScore, Mix_Chunk* moveSound) {
     return moved;
 }
 
-bool moveDown(int board[4][4],int score,int highestScore, Mix_Chunk* moveSound) {
+bool moveDown() {
     bool moved = false;
-    for (int j = 0; j < 4; j++) { // Duyệt từng cột
-        int target = 4 - 1;
+    for (int j = 0; j < GRID_SIZE; j++) { // Duyệt từng cột
+        int target = GRID_SIZE - 1;
         int lastValue = 0;
-        for (int i = 4 - 1; i >= 0; i--) {
+        for (int i = GRID_SIZE - 1; i >= 0; i--) {
             if (board[i][j] != 0) {
                 if (board[i][j] == lastValue) {
                     board[target + 1][j] *= 2;
@@ -177,4 +177,65 @@ bool moveDown(int board[4][4],int score,int highestScore, Mix_Chunk* moveSound) 
     Mix_PlayChannel(-1, moveSound, 0);
     }
     return moved;
+}
+
+void saveHighestScore() {
+    FILE* file = fopen("highestscore.txt", "w");
+    if (file) {
+        fprintf(file, "%d", highestScore);
+        fclose(file);
+    }
+}
+
+void handleMouseClick(int x, int y) {
+    // Kiểm tra nếu nhấn vào nút Restart
+    if (x >= 120 && x <= 300 && y >= 270 && y <= 320) {
+        // Reset game
+        memset(board, 0, sizeof(board)); // Xóa bảng
+        score = 0; // Reset điểm
+        add_Number();
+        add_Number();
+    }
+    // Kiểm tra nếu nhấn vào nút Quit
+    else if (x >= 120 && x <= 300 && y >= 330 && y <= 380) {
+        saveHighestScore(); // Lưu highestScore trước khi thoát
+        SDL_Quit(); // Thoát game
+        exit(0);
+    }
+}
+
+void handleInput(SDL_Event& event) {
+    bool moved = false;
+    if (event.type == SDL_KEYDOWN) {
+        switch (event.key.keysym.sym) {
+            case SDLK_LEFT: moved = moveLeft(); break;
+            case SDLK_RIGHT: moved = moveRight(); break;
+            case SDLK_UP: moved = moveUp(); break;
+            case SDLK_DOWN: moved = moveDown(); break;
+        }
+        if (moved) add_Number();
+    }
+    else if (event.type == SDL_MOUSEBUTTONDOWN) {
+        int mouseX = event.button.x;
+        int mouseY = event.button.y;
+        handleMouseClick(mouseX, mouseY);
+    }
+}
+
+void loadHighestScore() {
+    FILE* file = fopen("highestscore.txt", "r");
+    if (file) {
+        fscanf(file, "%d", &highestScore);
+        previousHighScore = highestScore;  // Lưu lại highestScore trước đó
+        fclose(file);
+    } else {
+        highestScore = 0;
+        previousHighScore = 0;
+    }
+}
+
+
+void handleGameOver() {
+    highestScore = previousHighScore;  // Khôi phục highestScore cũ
+    saveHighestScore();  // Ghi lại vào file
 }

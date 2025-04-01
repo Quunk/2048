@@ -1,13 +1,12 @@
 # depslib dependency file v1.0
-1743319748 source:g:\code\personal_project\2048\main.cpp
-	"2048.h"
+1743479938 source:g:\code\personal_project\2048\main.cpp
+	"graphic.h"
 
 1743220576 source:g:\code\personal_project\2048\image.cpp
 	"2048.h"
 
-1743449155 source:g:\code\personal_project\2048\logic.cpp
-	"logic.h"
-	<iostream>
+1743479938 source:g:\code\personal_project\2048\logic.cpp
+	"graphic.h"
 
 1743226247 g:\code\personal_project\2048\2048.h
 	<SDL.h>
@@ -26,38 +25,46 @@
 	<string>
 	<SDL_ttf.h>
 
-1743449154 source:g:\code\personal_project\2048\graphic.cpp
+1743479937 source:g:\code\personal_project\2048\graphic.cpp
 	"graphic.h"
 
-1743449154 g:\code\personal_project\2048\graphic.h
+1743479937 g:\code\personal_project\2048\graphic.h
 	<SDL.h>
 	<SDL_ttf.h>
 	<SDL_image.h>
 	<string>
+	<SDL.h>
+	<SDL_ttf.h>
+	<SDL_image.h>
+	<SDL_mixer.h>
+	<iostream>
+	<cstdlib>
+	<ctime>
+	<string>
 
-1743449153 source:g:\code\personal_project\2048\score.cpp
+1743449549 source:g:\code\personal_project\2048\score.cpp
 	"score.h"
 	<iostream>
 
-1743449153 g:\code\personal_project\2048\score.h
+1743449549 g:\code\personal_project\2048\score.h
 
-1743449152 source:g:\code\personal_project\2048\sound.cpp
+1743449549 source:g:\code\personal_project\2048\sound.cpp
 	"sound.h"
 	<iostream>
 
-1743449152 g:\code\personal_project\2048\sound.h
+1743449549 g:\code\personal_project\2048\sound.h
 	<SDL_mixer.h>
 
-1743449151 source:g:\code\personal_project\2048\input.cpp
+1743477127 source:g:\code\personal_project\2048\input.cpp
 	"input.h"
 	"logic.h"
 	"score.h"
 
-1743449151 g:\code\personal_project\2048\input.h
+1743477161 g:\code\personal_project\2048\input.h
 	<SDL.h>
 	<cstdlib>
 	<SDL_mixer.h>
 
-1743449153 g:\code\personal_project\2048\logic.h
+1743477233 g:\code\personal_project\2048\logic.h
 	<SDL_mixer.h>
 
