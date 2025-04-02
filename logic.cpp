@@ -1,9 +1,15 @@
-#include "graphic.h"
+#include "2048.h"
+#include "logic.h"
 
 int board[GRID_SIZE][GRID_SIZE]={0};
 int score = 0;
 int highestScore = 0;
 int previousHighScore = 0;
+
+Mix_Chunk* moveSound = nullptr;
+Mix_Chunk* winSound = nullptr;
+Mix_Chunk* loseSound = nullptr;
+Mix_Music* bgMusic = nullptr;
 
 // Hàm thêm số 2 vào vị trí ngẫu nhiên
 void add_Number() {
@@ -188,19 +194,21 @@ void saveHighestScore() {
 }
 
 void handleMouseClick(int x, int y) {
-    // Kiểm tra nếu nhấn vào nút Restart
-    if (x >= 120 && x <= 300 && y >= 270 && y <= 320) {
-        // Reset game
-        memset(board, 0, sizeof(board)); // Xóa bảng
-        score = 0; // Reset điểm
-        add_Number();
-        add_Number();
-    }
-    // Kiểm tra nếu nhấn vào nút Quit
-    else if (x >= 120 && x <= 300 && y >= 330 && y <= 380) {
-        saveHighestScore(); // Lưu highestScore trước khi thoát
-        SDL_Quit(); // Thoát game
-        exit(0);
+    if(checkWin()||!canMove()){
+        // Kiểm tra nếu nhấn vào nút Restart
+        if (x >= 120 && x <= 300 && y >= 270 && y <= 320) {
+            // Reset game
+            memset(board, 0, sizeof(board)); // Xóa bảng
+            score = 0; // Reset điểm
+            add_Number();
+            add_Number();
+        }
+        // Kiểm tra nếu nhấn vào nút Quit
+        else if (x >= 120 && x <= 300 && y >= 330 && y <= 380) {
+            saveHighestScore(); // Lưu highestScore trước khi thoát
+            SDL_Quit(); // Thoát game
+            exit(0);
+        }
     }
 }
 
@@ -238,4 +246,38 @@ void loadHighestScore() {
 void handleGameOver() {
     highestScore = previousHighScore;  // Khôi phục highestScore cũ
     saveHighestScore();  // Ghi lại vào file
+}
+
+void initSDL_mixer(){
+    // khởi tạo SDL_mixer với MIX_INIT_MP3
+    int flags = MIX_INIT_MP3;
+    int initted = Mix_Init(flags);
+    if ((initted & flags) != flags) {
+        printf("Mix_Init: Failed to initialize! SDL_mixer Error: %s\n", Mix_GetError());
+    }
+
+    if (Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048) < 0) {
+        printf("SDL_mixer could not initialize! SDL_mixer Error: %s\n", Mix_GetError());
+    }
+    Mix_VolumeMusic(MIX_MAX_VOLUME); // Đặt âm lượng tối đa
+    moveSound = Mix_LoadWAV("move.wav");
+    winSound = Mix_LoadWAV("win.wav");
+    loseSound = Mix_LoadWAV("lose.wav");
+    bgMusic = Mix_LoadMUS ("music.mp3");
+    if (!moveSound||!winSound||!loseSound) {
+        printf("Failed to load effectsound! SDL_mixer Error: %s\n", Mix_GetError());
+    }
+    else if (!bgMusic){
+        printf("Failed to load bgMusic! SDL_mixer Error: %s\n", Mix_GetError());
+    }
+    else {
+        Mix_PlayMusic(bgMusic, -1);
+    }
+}
+void closeMixer(){
+    Mix_FreeChunk(moveSound);
+    Mix_FreeChunk(winSound);
+    Mix_FreeChunk(loseSound);
+    Mix_FreeMusic(bgMusic);
+    Mix_CloseAudio();
 }

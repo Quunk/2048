@@ -1,9 +1,12 @@
+#include "2048.h"
 #include "graphic.h"
+#include "logic.h"
 
 int main(int argc, char* argv[]) {
     srand(time(nullptr));
 
     initSDL();
+    initSDL_mixer();
 
     loadHighestScore();
     add_Number();
@@ -80,5 +83,6 @@ int main(int argc, char* argv[]) {
 
 
     closeSDL();
+    closeMixer();
     return 0;
 }

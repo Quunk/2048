@@ -1,14 +1,30 @@
 #ifndef logic
 #define logic
+
+#include <SDL.h>
+#include <cstdlib>
 #include <SDL_mixer.h>
 
-void add_Number(int board[4][4]);
-bool checkWin(int board[4][4]);
-bool canMove(int board[4][4]);
-bool moveLeft(int board[4][4],int score, int highestScore, Mix_Chunk* moveSound);
-bool moveRight(int board[4][4], int score,int highestScore, Mix_Chunk* moveSound);
-bool moveUp(int board[4][4], int score, int highestScore, Mix_Chunk* moveSound);
-bool moveDown(int board[4][4], int score, int highestScore, Mix_Chunk* moveSound);
+extern Mix_Chunk* moveSound;
+extern Mix_Chunk* winSound;
+extern Mix_Chunk* loseSound;
+extern Mix_Music* bgMusic;
+
+void add_Number();
+bool checkWin();
+bool canMove();
+bool moveLeft();
+bool moveRight();
+bool moveUp();
+bool moveDown();
+
+void saveHighestScore();
+void handleMouseClick(int x, int y);
+void handleInput(SDL_Event& event);
+void loadHighestScore();
+void handleGameOver();
+
+void initSDL_mixer();
+void closeMixer();
 
 #endif // logic
-

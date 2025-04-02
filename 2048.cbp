@@ -32,10 +32,12 @@
 			<Add option="-Wall" />
 			<Add option="-fexceptions" />
 		</Compiler>
+		<Unit filename="2048.h" />
 		<Unit filename="graphic.cpp" />
 		<Unit filename="graphic.h" />
 		<Unit filename="highestscore.txt" />
 		<Unit filename="logic.cpp" />
+		<Unit filename="logic.h" />
 		<Unit filename="main.cpp" />
 		<Extensions>
 			<lib_finder disable_auto="1" />

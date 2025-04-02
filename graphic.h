@@ -1,24 +1,12 @@
 #ifndef graphic
 #define graphic
-#include <SDL.h>
+
 #include <SDL_ttf.h>
 #include <SDL_image.h>
 #include <string>
-
-#include <SDL.h>
-#include <SDL_ttf.h>
-#include <SDL_image.h>
-#include <SDL_mixer.h>
-#include <iostream>
-#include <cstdlib>
-#include <ctime>
-#include <string>
-
-using namespace std;
 
 const int SCREEN_WIDTH = 427;
 const int SCREEN_HEIGHT = 618;
-const int GRID_SIZE = 4;
 const int CELL_SIZE = 90;
 const int PADDING = 10;
 const int BOARD_X = 9;
@@ -27,17 +15,9 @@ const int BOARD_Y = 200;
 extern SDL_Window* window;
 extern SDL_Renderer* renderer;
 extern TTF_Font* font;
-extern Mix_Chunk* moveSound;
-extern Mix_Chunk* winSound;
-extern Mix_Chunk* loseSound;
-extern Mix_Music* bgMusic;
+
 extern SDL_Texture* backgroundTexture;
 extern SDL_Texture* smallImage;
-
-extern int board[GRID_SIZE][GRID_SIZE];
-extern int score;
-extern int highestScore;
-extern int previousHighScore;
 
 SDL_Texture* loadBackground(const string& path, SDL_Renderer* renderer);
 void renderImage(SDL_Texture* texture, SDL_Renderer* renderer, int x, int y, int w, int h);
@@ -51,19 +31,5 @@ void renderButton(const char* text, int x, int y, int w, int h, SDL_Color color)
 void renderGameOver();
 void renderWIN();
 void renderScore();
-
-void add_Number();
-bool checkWin();
-bool canMove();
-bool moveLeft();
-bool moveRight();
-bool moveUp();
-bool moveDown();
-
-void saveHighestScore();
-void handleMouseClick(int x, int y);
-void handleInput(SDL_Event& event);
-void loadHighestScore();
-void handleGameOver();
-
 #endif
+
