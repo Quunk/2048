@@ -77,6 +77,9 @@ int main(int argc, char* argv[]) {
         renderBoard();
         renderTiles();
         renderScore();
+        renderButton("4x4", 347, 10, 70, 50, {156,67,68});
+        renderButton("5x5", 347, 70, 70, 50, {63,138,158});
+        renderButton("6x6", 347, 130, 70, 50, {71,158,63});
         saveHighestScore();
         SDL_RenderPresent(renderer);
     }

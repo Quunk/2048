@@ -1,11 +1,11 @@
 #include "2048.h"
 #include "graphic.h"
+#include "logic.h"
 
 SDL_Window* window = nullptr;
 SDL_Renderer* renderer = nullptr;
 TTF_Font* font = nullptr;
 SDL_Texture* backgroundTexture = nullptr;
-SDL_Texture* smallImage = nullptr;
 
 //load background
 SDL_Texture* loadBackground(const string& path, SDL_Renderer* renderer) {
@@ -40,11 +40,11 @@ void initSDL() {
 
     window = SDL_CreateWindow("2048 Game", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
     renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
-    font = TTF_OpenFont("arial.ttf", 30);
+    font = TTF_OpenFont("arial.ttf", 24);
     TTF_SetFontStyle(font, TTF_STYLE_BOLD); // In đậm
 
     // Load background texture
-    backgroundTexture = loadBackground("background.png", renderer);
+    backgroundTexture = loadBackground("Background_1.jpg", renderer);
 }
 
 
@@ -106,8 +106,8 @@ void renderTiles() {
 // Hiển thị bảng game
 void renderBoard() {
 
-    SDL_SetRenderDrawColor(renderer, 0, 185, 185, 255);
-    SDL_Rect boardRect = {BOARD_X, BOARD_Y, 4 * (CELL_SIZE + PADDING) + PADDING, 4 * (CELL_SIZE + PADDING) + PADDING};
+    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
+    SDL_Rect boardRect = {BOARD_X, BOARD_Y, GRID_SIZE * (CELL_SIZE + PADDING) + PADDING, GRID_SIZE * (CELL_SIZE + PADDING) + PADDING};
     SDL_RenderFillRect(renderer, &boardRect);
 
     for (int i = 0; i < GRID_SIZE; i++) {
@@ -118,7 +118,7 @@ void renderBoard() {
                 CELL_SIZE,
                 CELL_SIZE
             };
-            SDL_SetRenderDrawColor(renderer, 205, 192, 180, 255);
+            SDL_SetRenderDrawColor(renderer, 186,186,186, 255);
             SDL_RenderFillRect(renderer, &cell);
         }
     }
@@ -189,7 +189,7 @@ void renderGameOver() {
     SDL_Color textColor = {255, 255, 255, 255}; // Màu trắng
     SDL_Surface* textSurface = TTF_RenderText_Solid(font, "Game Over!", textColor);
     SDL_Texture* textTexture = SDL_CreateTextureFromSurface(renderer, textSurface);
-    SDL_Rect textRect = {115, 220, textSurface->w, textSurface->h};
+    SDL_Rect textRect = {130, 220, textSurface->w, textSurface->h};
     SDL_RenderCopy(renderer, textTexture, NULL, &textRect);
     SDL_FreeSurface(textSurface);
     SDL_DestroyTexture(textTexture);
@@ -206,7 +206,7 @@ void renderWIN() {
     SDL_Color textColor = {255, 255, 255, 255}; // Màu trắng
     SDL_Surface* textSurface = TTF_RenderText_Solid(font, "You Win!", textColor);
     SDL_Texture* textTexture = SDL_CreateTextureFromSurface(renderer, textSurface);
-    SDL_Rect textRect = {130, 220, textSurface->w, textSurface->h};
+    SDL_Rect textRect = {145, 220, textSurface->w, textSurface->h};
     SDL_RenderCopy(renderer, textTexture, NULL, &textRect);
     SDL_FreeSurface(textSurface);
     SDL_DestroyTexture(textTexture);

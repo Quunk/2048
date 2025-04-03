@@ -1,7 +1,10 @@
 #include "2048.h"
 #include "logic.h"
 
-int board[GRID_SIZE][GRID_SIZE]={0};
+int GRID_SIZE = 4; // kích thước bảng
+int CELL_SIZE = 90;// kích thước ô số
+int PADDING = 10;// khoảng cách các ô
+vector<vector<int>> board(GRID_SIZE, vector<int>(GRID_SIZE, 0));
 int score = 0;
 int highestScore = 0;
 int previousHighScore = 0;
@@ -25,18 +28,43 @@ void add_Number() {
     }
     if (count > 0) {
         int r = rand() % count;
-        board[emptyTiles[r][0]][emptyTiles[r][1]] = (rand() % 10 < 9) ? 2 : 4;
+        if ( GRID_SIZE == 4){
+            board[emptyTiles[r][0]][emptyTiles[r][1]] = (rand() % 10 < 9) ? 2 : 4;
+        }
+        else if ( GRID_SIZE == 5){
+            board[emptyTiles[r][0]][emptyTiles[r][1]] = (rand() % 10 < 7) ? 2 : 4;
+        }
+        else if ( GRID_SIZE == 6){
+            board[emptyTiles[r][0]][emptyTiles[r][1]] = (rand() % 10 < 5) ? 2 : 4;
+        }
     }
 }
 bool checkWin(){
-    for(int i=0;i<4;i++){
-        for(int j=0;j<4;j++){
-            if(board[i][j]==2048){return true;}
+    if (GRID_SIZE == 4 ){
+        for(int i=0;i<4;i++){
+            for(int j=0;j<4;j++){
+                if(board[i][j]==2048){return true;}
+            }
         }
+        return false;
     }
-    return false;
+    if (GRID_SIZE == 5 ){
+        for(int i=0;i<5;i++){
+            for(int j=0;j<5;j++){
+                if(board[i][j]==8192){return true;}
+            }
+        }
+        return false;
+    }
+    if (GRID_SIZE == 6 ){
+        for(int i=0;i<6;i++){
+            for(int j=0;j<6;j++){
+                if(board[i][j]==32768){return true;}
+            }
+        }
+        return false;
+    }
 }
-
 bool canMove() {
     for (int i = 0; i < 4; i++) {
         for (int j = 0; j < 4; j++) {
@@ -198,7 +226,7 @@ void handleMouseClick(int x, int y) {
         // Kiểm tra nếu nhấn vào nút Restart
         if (x >= 120 && x <= 300 && y >= 270 && y <= 320) {
             // Reset game
-            memset(board, 0, sizeof(board)); // Xóa bảng
+            board.assign(GRID_SIZE, vector<int>(GRID_SIZE, 0)); // Xóa bảng
             score = 0; // Reset điểm
             add_Number();
             add_Number();
@@ -209,6 +237,36 @@ void handleMouseClick(int x, int y) {
             SDL_Quit(); // Thoát game
             exit(0);
         }
+    }
+    if(x >= 347 && x<= 417 && y >= 10 && y <= 60){
+        GRID_SIZE = 4;
+        CELL_SIZE = 90;// kích thước ô số
+        PADDING = 10;// khoảng cách các ô
+        // Reset game
+        board.assign(GRID_SIZE, vector<int>(GRID_SIZE, 0)); // Xóa bảng
+        score = 0; // Reset điểm
+        add_Number();
+        add_Number();
+    }
+    if(x >= 347 && x<= 417 && y >= 70 && y <= 120){
+        GRID_SIZE = 5;
+        CELL_SIZE = 70;// kích thước ô số
+        PADDING = 10;// khoảng cách các ô
+        // Reset game
+            board.assign(GRID_SIZE, vector<int>(GRID_SIZE, 0)); // Xóa bảng
+            score = 0; // Reset điểm
+            add_Number();
+            add_Number();
+    }
+    if(x >= 347 && x<= 417 && y >= 130 && y <= 180){
+        GRID_SIZE = 6;
+        CELL_SIZE = 57;// kích thước ô số
+        PADDING = 10;// khoảng cách các ô
+        // Reset game
+            board.assign(GRID_SIZE, vector<int>(GRID_SIZE, 0)); // Xóa bảng
+            score = 0; // Reset điểm
+            add_Number();
+            add_Number();
     }
 }
 

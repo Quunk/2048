@@ -1,5 +1,5 @@
 # depslib dependency file v1.0
-1743605154 source:g:\code\personal_project\2048\main.cpp
+1743699088 source:g:\code\personal_project\2048\main.cpp
 	"2048.h"
 	"graphic.h"
 	"logic.h"
@@ -7,13 +7,14 @@
 1743220576 source:g:\code\personal_project\2048\image.cpp
 	"2048.h"
 
-1743606651 source:g:\code\personal_project\2048\logic.cpp
+1743700528 source:g:\code\personal_project\2048\logic.cpp
 	"2048.h"
 	"logic.h"
 
-1743605201 g:\code\personal_project\2048\2048.h
+1743699613 g:\code\personal_project\2048\2048.h
 	<ctime>
 	<iostream>
+	<vector>
 
 1743319790 source:g:\code\personal_project\2048\graphic_and_sound.cpp
 	"2048.h"
@@ -22,11 +23,12 @@
 	<string>
 	<SDL_ttf.h>
 
-1743605155 source:g:\code\personal_project\2048\graphic.cpp
+1743700765 source:g:\code\personal_project\2048\graphic.cpp
 	"2048.h"
 	"graphic.h"
+	"logic.h"
 
-1743605181 g:\code\personal_project\2048\graphic.h
+1743699613 g:\code\personal_project\2048\graphic.h
 	<SDL_ttf.h>
 	<SDL_image.h>
 	<string>
@@ -54,7 +56,7 @@
 	<cstdlib>
 	<SDL_mixer.h>
 
-1743605201 g:\code\personal_project\2048\logic.h
+1743652727 g:\code\personal_project\2048\logic.h
 	<SDL.h>
 	<cstdlib>
 	<SDL_mixer.h>

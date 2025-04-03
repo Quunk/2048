@@ -3,17 +3,19 @@
 
 #include <ctime>
 #include <iostream>
+#include <vector>
 
 using namespace std;
 
 
-const int GRID_SIZE = 4;
+extern int GRID_SIZE; // Kích thước bảng
+extern int CELL_SIZE ;// kích thước ô số
+extern int PADDING ;// khoảng cách các ô
 
+extern vector<vector<int>> board;
 
-extern int board[GRID_SIZE][GRID_SIZE];
-
-extern int score;
-extern int highestScore;
-extern int previousHighScore;
+extern int score; // điểm hiện tại
+extern int highestScore;// điểm cao nhất
+extern int previousHighScore;// dùng để lưu điểm cao nhất
 
 #endif
