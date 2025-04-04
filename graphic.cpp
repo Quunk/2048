@@ -10,25 +10,21 @@ SDL_Texture* backgroundTexture = nullptr;
 //load background
 SDL_Texture* loadBackground(const string& path, SDL_Renderer* renderer) {
     SDL_Texture* newTexture = nullptr;
-    SDL_Surface* loadedSurface = IMG_Load(path.c_str());
+    SDL_Surface* loadedSurface = IMG_Load(path.c_str());// load ảnh từ file, chuyển thành texture để vẽ
 
     if (!loadedSurface) {
         printf("Không thể load ảnh! SDL_image Error: %s\n", IMG_GetError());
     } else {
-        newTexture = SDL_CreateTextureFromSurface(renderer, loadedSurface);
+        newTexture = SDL_CreateTextureFromSurface(renderer, loadedSurface);// load ảnh vào SDL_Surface
         if (!newTexture) {
             printf("Không thể tạo texture từ ảnh! SDL Error: %s\n", SDL_GetError());
         }
-        SDL_FreeSurface(loadedSurface);
+        SDL_FreeSurface(loadedSurface);// chuyển surface thành texture
     }
 
     return newTexture;
 }
 
-void renderImage(SDL_Texture* texture, SDL_Renderer* renderer, int x, int y, int w, int h) {
-    SDL_Rect renderQuad = { x, y, w, h };
-    SDL_RenderCopy(renderer, texture, NULL, &renderQuad);
-}
 
 // Khởi tạo SDL
 void initSDL() {
@@ -123,34 +119,7 @@ void renderBoard() {
         }
     }
 }
-
-void renderText(const string& text, int x, int y, SDL_Color color) {
-    TTF_Font* font = TTF_OpenFont("font.ttf", 24); // Load font với kích thước 24px
-    if (!font) {
-        printf("Failed to load font: %s\n", TTF_GetError());
-        return;
-    }
-
-    SDL_Surface* textSurface = TTF_RenderUTF8_Solid(font, text.c_str(), color);
-    if (!textSurface) {
-        printf("Unable to render text: %s\n", TTF_GetError());
-        TTF_CloseFont(font);
-        return;
-    }
-
-    SDL_Texture* textTexture = SDL_CreateTextureFromSurface(renderer, textSurface);
-    if (!textTexture) {
-        printf("Unable to create texture: %s\n", SDL_GetError());
-    } else {
-        SDL_Rect textRect = {x, y, textSurface->w, textSurface->h};
-        SDL_RenderCopy(renderer, textTexture, NULL, &textRect);
-        SDL_DestroyTexture(textTexture);
-    }
-
-    SDL_FreeSurface(textSurface);
-    TTF_CloseFont(font);
-}
-
+// giải phóng SDL
 void closeSDL() {
     TTF_CloseFont(font);
     SDL_DestroyRenderer(renderer);
@@ -160,7 +129,7 @@ void closeSDL() {
     SDL_Quit();
 }
 
-
+// vẽ các nút
 void renderButton(const char* text, int x, int y, int w, int h, SDL_Color color) {
     SDL_Rect buttonRect = {x, y, w, h};
     SDL_SetRenderDrawColor(renderer, color.r, color.g, color.b, 255);
@@ -184,12 +153,13 @@ void renderButton(const char* text, int x, int y, int w, int h, SDL_Color color)
     SDL_DestroyTexture(textTexture);
 }
 
+// vẽ menu khi kết thúc
 void renderGameOver() {
 
     SDL_Color textColor = {255, 255, 255, 255}; // Màu trắng
     SDL_Surface* textSurface = TTF_RenderText_Solid(font, "Game Over!", textColor);
     SDL_Texture* textTexture = SDL_CreateTextureFromSurface(renderer, textSurface);
-    SDL_Rect textRect = {130, 220, textSurface->w, textSurface->h};
+    SDL_Rect textRect = {135, 220, textSurface->w, textSurface->h};
     SDL_RenderCopy(renderer, textTexture, NULL, &textRect);
     SDL_FreeSurface(textSurface);
     SDL_DestroyTexture(textTexture);
@@ -206,7 +176,7 @@ void renderWIN() {
     SDL_Color textColor = {255, 255, 255, 255}; // Màu trắng
     SDL_Surface* textSurface = TTF_RenderText_Solid(font, "You Win!", textColor);
     SDL_Texture* textTexture = SDL_CreateTextureFromSurface(renderer, textSurface);
-    SDL_Rect textRect = {145, 220, textSurface->w, textSurface->h};
+    SDL_Rect textRect = {150, 220, textSurface->w, textSurface->h};
     SDL_RenderCopy(renderer, textTexture, NULL, &textRect);
     SDL_FreeSurface(textSurface);
     SDL_DestroyTexture(textTexture);
@@ -218,6 +188,7 @@ void renderWIN() {
     renderButton("Quit", 120, 330, 180, 50, {205, 50, 50});
 }
 
+// hiện điểm số
 void renderScore() {
     SDL_Color textColor = { 255, 255, 255}; // Màu chữ trắng
     string scoreText = "Score: " + to_string(score);

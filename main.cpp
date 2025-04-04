@@ -2,8 +2,14 @@
 #include "graphic.h"
 #include "logic.h"
 
+const int FPS = 60; // tốc độ khung hình
+const int frameDelay = 1000 / FPS; // ố mili giây mỗi khung hình 16ms
+
 int main(int argc, char* argv[]) {
-    srand(time(nullptr));
+    srand(time(nullptr)); //khởi tạo bộ sinh số ngẫu nhiên trên thời gian hiện tại
+
+    Uint32 frameStart; // Lưu thời gian bắt đầu của mỗi khung hình để điều chỉnh thời gian delay
+    int frameTime;
 
     initSDL();
     initSDL_mixer();
@@ -17,6 +23,8 @@ int main(int argc, char* argv[]) {
 
     SDL_Event event;
     while (running) {
+        frameStart = SDL_GetTicks();
+        // xử lý trạng thái khi thua
         if (!canMove()) {
             handleGameOver();
             Mix_PlayChannel(-1, loseSound, 0); // Phát âm thanh game over
@@ -39,7 +47,7 @@ int main(int argc, char* argv[]) {
                 }
             }
         }
-
+        // xử lí trạng thái khi win
         if (checkWin()) {
             if (score > highestScore) {
                 highestScore = score;
@@ -82,9 +90,12 @@ int main(int argc, char* argv[]) {
         renderButton("6x6", 347, 130, 70, 50, {71,158,63});
         saveHighestScore();
         SDL_RenderPresent(renderer);
+        // Điều chỉnh thời gian hiển thị khung hình
+        frameTime = SDL_GetTicks() - frameStart;
+        if (frameDelay > frameTime) {
+            SDL_Delay(frameDelay - frameTime);
+        }
     }
-
-
     closeSDL();
     closeMixer();
     return 0;
