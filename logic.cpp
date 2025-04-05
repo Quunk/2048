@@ -92,7 +92,8 @@ bool moveLeft() {
                     board[i][j] = 0;
                     lastValue = 0;
                     moved = true;
-                } else {
+                }
+                else {
                     if (j != target) {
                         board[i][target] = board[i][j];
                         board[i][j] = 0;
@@ -214,14 +215,6 @@ bool moveDown() {
     }
     return moved;
 }
-//lưu điểm
-void saveHighestScore() {
-    FILE* file = fopen("highestscore.txt", "w");
-    if (file) {
-        fprintf(file, "%d", highestScore);
-        fclose(file);
-    }
-}
 // vùng nhấp chuột
 void handleMouseClick(int x, int y) {
     if(checkWin()||!canMove()){
@@ -235,7 +228,6 @@ void handleMouseClick(int x, int y) {
         }
         // Kiểm tra nếu nhấn vào nút Quit
         else if (x >= 120 && x <= 300 && y >= 330 && y <= 380) {
-            saveHighestScore(); // Lưu highestScore trước khi thoát
             SDL_Quit(); // Thoát game
             exit(0);
         }
@@ -289,6 +281,14 @@ void handleInput(SDL_Event& event) {
         handleMouseClick(mouseX, mouseY);
     }
 }
+//lưu điểm
+void saveHighestScore() {
+    FILE* file = fopen("highestscore.txt", "w");
+    if (file) {
+        fprintf(file, "%d", highestScore);
+        fclose(file);
+    }
+}
 // load lại điểm cao nhất từ file
 void loadHighestScore() {
     FILE* file = fopen("highestscore.txt", "r");
@@ -302,7 +302,7 @@ void loadHighestScore() {
     }
 }
 
-// lưu lại điểm cao nhất
+// Quay lại điểm cao nhất
 void handleGameOver() {
     highestScore = previousHighScore;  // Khôi phục highestScore cũ
     saveHighestScore();  // Ghi lại vào file

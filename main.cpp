@@ -29,6 +29,9 @@ int main(int argc, char* argv[]) {
             handleGameOver();
             Mix_PlayChannel(-1, loseSound, 0); // Phát âm thanh game over
             SDL_RenderCopy(renderer, backgroundTexture, NULL, NULL);
+            renderButton("4x4", 347, 10, 70, 50, {156,67,68});
+            renderButton("5x5", 347, 70, 70, 50, {63,138,158});
+            renderButton("6x6", 347, 130, 70, 50, {71,158,63});
             renderGameOver();
             SDL_RenderPresent(renderer);
 
@@ -54,6 +57,9 @@ int main(int argc, char* argv[]) {
                 saveHighestScore();  // Lưu điểm cao nhất
             }
             SDL_RenderCopy(renderer, backgroundTexture, NULL, NULL);
+            renderButton("4x4", 347, 10, 70, 50, {156,67,68});
+            renderButton("5x5", 347, 70, 70, 50, {63,138,158});
+            renderButton("6x6", 347, 130, 70, 50, {71,158,63});
             Mix_PlayChannel(-1, winSound, 0); // Phát âm thanh game over
             renderWIN();
             SDL_RenderPresent(renderer);

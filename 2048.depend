@@ -1,5 +1,5 @@
 # depslib dependency file v1.0
-1743777376 source:g:\code\personal_project\2048\main.cpp
+1743822469 source:g:\code\personal_project\2048\main.cpp
 	"2048.h"
 	"graphic.h"
 	"logic.h"
@@ -7,7 +7,7 @@
 1743220576 source:g:\code\personal_project\2048\image.cpp
 	"2048.h"
 
-1743763616 source:g:\code\personal_project\2048\logic.cpp
+1743822382 source:g:\code\personal_project\2048\logic.cpp
 	"2048.h"
 	"logic.h"
 
