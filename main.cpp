@@ -88,7 +88,6 @@ int main(int argc, char* argv[]) {
         SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
         SDL_RenderClear(renderer);
         SDL_RenderCopy(renderer, backgroundTexture, NULL, NULL);
-        renderBoard();
         renderTiles();
         renderScore();
         renderButton("4x4", 347, 10, 70, 50, {156,67,68});

@@ -25,8 +25,6 @@ void initSDL();
 // tạo màu và vẽ ô số
 SDL_Color getTileColor(int value);
 void renderTiles();
-// vẽ bảng
-void renderBoard();
 // vẽ nút
 void renderButton(const char* text, int x, int y, int w, int h, SDL_Color color);
 // vẽ menu khi kết thúc
