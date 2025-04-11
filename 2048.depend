@@ -1,5 +1,5 @@
 # depslib dependency file v1.0
-1743824159 source:g:\code\personal_project\2048\main.cpp
+1743953907 source:g:\code\personal_project\2048\main.cpp
 	"2048.h"
 	"graphic.h"
 	"logic.h"
@@ -23,7 +23,7 @@
 	<string>
 	<SDL_ttf.h>
 
-1743824151 source:g:\code\personal_project\2048\graphic.cpp
+1743824392 source:g:\code\personal_project\2048\graphic.cpp
 	"2048.h"
 	"graphic.h"
 	"logic.h"
